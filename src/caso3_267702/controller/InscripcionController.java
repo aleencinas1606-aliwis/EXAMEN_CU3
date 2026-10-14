@@ -20,13 +20,16 @@ public class InscripcionController {
     }
 
     private void cargarDatosSimulados() {
-        // Datos de prueba para simular la base de datos
+        // Datos de prueba para simular lo que seria la base de datos
         listaTalleres.add(new Taller("T1", "Arquitectura de Software", "Dr. Ramon Rene", "19/Oct/2026", "09:00 - 11:00"));
-        listaTalleres.add(new Taller("T2", "Desarrollo de softw", "Mtra. Gómez", "20/Oct/2026", "11:00 - 13:00"));
-        listaTalleres.add(new Taller("T3", "Modelado de procesos", "Ing. Rodríguez", "21/Oct/2026", "14:00 - 16:00"));
+        listaTalleres.add(new Taller("T2", "Desarrollo web", "Mtra. Brianda", "20/Oct/2026", "11:00 - 13:00"));
+        listaTalleres.add(new Taller("T3", "Ingenieria de Requisitos", "Ing. German", "19/Oct/2026", "14:00 - 16:00"));
+        listaTalleres.add(new Taller("T4", "Calculoo", "Mtra. Susana", "21/Oct/2026", "12:00 - 13:00"));
+        listaTalleres.add(new Taller("T5", "Diseño de software", "Ing. Mejia", "21/Oct/2026", "14:00 - 16:00"));
+        listaTalleres.add(new Taller("T6", "Redes", "Ing. Benitez", "20/Oct/2026", "08:00 - 09:00"));
 
-        listaAlumnos.add(new Alumno("0000012345", "Juan Pérez López", 5, "Ingeniería en Software"));
-        listaAlumnos.add(new Alumno("0000067890", "Ana María Sosa", 7, "Ingeniería en Software"));
+        listaAlumnos.add(new Alumno("00000267702", "Alejandra Encinas Ayala", 5, "Ingeniería en Software"));
+        listaAlumnos.add(new Alumno("00000267048", "Diego Saul Enriquez Campoy", 7, "Ingeniería en Software"));
     }
 
     public List<Taller> getTalleres() {

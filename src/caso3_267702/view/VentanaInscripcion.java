@@ -181,9 +181,9 @@ import javax.swing.JOptionPane;
                 "Horario:      " + tallerSeleccionado.getHorario() + "\n" +
                 "=============================================="
             );
-            JOptionPane.showMessageDialog(this, "Inscripcion exitosa... Ticket generado");
+            JOptionPane.showMessageDialog(this, "La inscripcion fue exitosa... Ticket generado");
         } else {
-            txtFlujoAlumno.setText("Alumno no encontrado.\n(ID de prueba válido: 0000012345)");
+            txtFlujoAlumno.setText("Alumno no encontrado.\n(ID de prueba valida: 00000267702)");
         }
     }//GEN-LAST:event_btnValidarIdActionPerformed
  
