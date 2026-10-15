@@ -69,6 +69,11 @@ import javax.swing.JOptionPane;
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
+        listTalleres.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                listTalleresValueChanged(evt);
+            }
+        });
         jScrollPane3.setViewportView(listTalleres);
 
         txtDetallesTaller.setColumns(20);
@@ -101,26 +106,26 @@ import javax.swing.JOptionPane;
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(21, 21, 21)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
                                 .addComponent(btnValidarId)
-                                .addGap(26, 26, 26)
-                                .addComponent(txtIdAlumno))
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                                .addComponent(txtIdAlumno, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane4)
+                            .addComponent(jScrollPane3)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(112, 112, 112)
                         .addComponent(btnInscribirse)))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE)
+                .addGap(28, 28, 28))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(31, 31, 31)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnValidarId)
@@ -138,54 +143,84 @@ import javax.swing.JOptionPane;
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnInscribirseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInscribirseActionPerformed
-      if (listTalleres.getSelectedValue() == null) {
+        if (listTalleres.getSelectedValue() == null) {
             JOptionPane.showMessageDialog(this, "Debe seleccionar un taller de la lista.");
             return;
         }
-        Object seleccion = listTalleres.getSelectedValue();
-       if (seleccion instanceof Taller) {
-        tallerSeleccionado = (Taller) seleccion;
-        } else {
-  
-    String nombreTaller = String.valueOf(seleccion);
-    for (Taller t : controlador.getTalleres()) {
-        if (t.getNombre().equals(nombreTaller)) {
-            tallerSeleccionado = t;
-            break;
-        }
-       }
-     }
+        // Coloca las instrucciones iniciales en la zona de flujo antes del recibo
+        txtFlujoAlumno.setText("Materia apartada temporalmente.\nPor favor, ingrese su ID en la parte superior y presione 'Validar Id'.");
+        txtIdAlumno.requestFocus();        
     }//GEN-LAST:event_btnInscribirseActionPerformed
 
     private void btnValidarIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnValidarIdActionPerformed
-     if (tallerSeleccionado == null) {
-            JOptionPane.showMessageDialog(this, "Primero seleccione un taller y presione Inscribirse.");
+  if (tallerSeleccionado == null) {
+            JOptionPane.showMessageDialog(this, "Primero seleccione un taller de la lista e intente de nuevo.", "Atención", JOptionPane.WARNING_MESSAGE);
             return;
         }
         
         String idStr = txtIdAlumno.getText().trim();
-        alumnoEncontrado = controlador.buscarAlumnoPorId(idStr);
-        
-        if (alumnoEncontrado != null) {
-            int folio = new java.util.Random().nextInt(90000) + 10000;
-            txtFlujoAlumno.setText(
-                "==============================================\n" +
-                "               TICKET DE INSCRIPCION              \n" +
-                "================================================\n" +
-                "Folio Ticket: ISW-" + folio + "\n" +
-                "ID Alumno:    " + alumnoEncontrado.getId() + "\n" +
-                "Nombre:       " + alumnoEncontrado.getNombre() + "\n" +
-                "Programa:     " + alumnoEncontrado.getProgramme() + "\n" +
-                "--------------------------------------------------\n" +
-                "Curso:        " + tallerSeleccionado.getNombre() + "\n" +
-                "Horario:      " + tallerSeleccionado.getHorario() + "\n" +
-                "=============================================="
-            );
-            JOptionPane.showMessageDialog(this, "La inscripcion fue exitosa... Ticket generado");
-        } else {
-            txtFlujoAlumno.setText("Alumno no encontrado.\n(ID de prueba valida: 00000267702)");
+         if (idStr.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El campo de ID no puede estar vacio. Por favor ingrese su matricula.", "Campo Vacío", JOptionPane.WARNING_MESSAGE);
+            txtFlujoAlumno.setText("Error: No se ingreso ningun ID.\nEscriba su matricula para continuar.");
+            txtIdAlumno.requestFocus();
+            return;
         }
+        alumnoEncontrado = controlador.buscarAlumnoPorId(idStr);
+        if (alumnoEncontrado == null) {
+            JOptionPane.showMessageDialog(this, "El ID ingresado es erroneo o no esta registrado en el sistema.", "ID Erroneo", JOptionPane.ERROR_MESSAGE);
+            txtFlujoAlumno.setText("Error: Matricula no registrada.\nIntente con un ID valido (Ej. 00000267702).");
+            txtIdAlumno.selectAll();
+            txtIdAlumno.requestFocus();
+            return;
+        }
+        int folio = new java.util.Random().nextInt(90000) + 10000;
+        
+        txtFlujoAlumno.setText(
+            "==============================================\n" +
+            "          RECIBO FINAL DE INSCRIPCION         \n" +
+            "==============================================\n" +
+            " Folio Ticket: ISW-" + folio + "\n" +
+            " ID Alumno:    " + alumnoEncontrado.getId() + "\n" +
+            " Nombre:       " + alumnoEncontrado.getNombre() + "\n" +
+            " Programa:     " + alumnoEncontrado.getProgramme() + "\n" +
+            "--------------------------------------------------\n" +
+            " Curso:        " + tallerSeleccionado.getNombre() + "\n" +
+            " Instructor:   " + tallerSeleccionado.getInstructor() + "\n" +
+            " Horario:      " + tallerSeleccionado.getHorario() + " (" + tallerSeleccionado.getFecha() + ")\n" +
+            "==============================================\n" +
+            "      ¡Inscripción Confirmada Exitosamente!    ");
+        JOptionPane.showMessageDialog(this, "La inscripcion fue exitosa... ¡Recibo generado en pantalla!");
+
     }//GEN-LAST:event_btnValidarIdActionPerformed
+
+    private void listTalleresValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listTalleresValueChanged
+      if (!evt.getValueIsAdjusting()) {
+            Object seleccion = listTalleres.getSelectedValue();
+            if (seleccion instanceof Taller) {
+                tallerSeleccionado = (Taller) seleccion;
+            } else if (seleccion != null) {
+                String nombreTaller = String.valueOf(seleccion);
+                for (Taller t : controlador.getTalleres()) {
+                    if (t.getNombre().equals(nombreTaller)) {
+                        tallerSeleccionado = t;
+                        break;
+                    }
+                }
+            }
+            if (tallerSeleccionado != null) {
+                txtDetallesTaller.setText(
+                    "==============================================\n" +
+                    "       VISTA DE LA MATERIA SELECCIONADA       \n" +
+                    "==============================================\n" +
+                    " Taller:     " + tallerSeleccionado.getNombre() + "\n" +
+                    " Instructor: " + tallerSeleccionado.getInstructor() + "\n" +
+                    " Fecha:      " + tallerSeleccionado.getFecha() + "\n" +
+                    " Horario:    " + tallerSeleccionado.getHorario() + "\n" +
+                    "=============================================="
+                );
+            }
+      }
+    }//GEN-LAST:event_listTalleresValueChanged
  
     public static void main(String args[]) {
         
